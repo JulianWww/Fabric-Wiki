@@ -6,7 +6,9 @@ import net.minecraft.util.Identifier;
 
 public enum CraftingBackgrounds {
 	CRAFTING("textures/gui/crafting.png", PageContentWidget::renderCrafting, 134, 71),
-	FURNACE("textures/gui/furnace.png", PageContentWidget::renderCrafting, 101, 73);
+	FURNACE("textures/gui/furnace.png", PageContentWidget::renderSmelting, 101, 73),
+	CAMPFIRE("textures/gui/campfire.png", PageContentWidget::renderCampfire, 101, 43),
+	SMITHING("textures/gui/smithing.png", PageContentWidget::renderSmithing, 161, 75);
 
 	public final Identifier texture;
 	public final int w, h;

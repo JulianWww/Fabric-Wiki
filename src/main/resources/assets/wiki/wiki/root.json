@@ -13,7 +13,7 @@
 		},
 		{
 			"style": "recipe",
-			"recipe": "minecraft:iron_ingot_from_iron_block",
+			"recipe": "minecraft:chest",
 			"text": "title"
 		},
 		{
@@ -22,9 +22,28 @@
 			"text": "title"
 		},
 		{
+			"style": "recipe",
+			"recipe": "minecraft:cooked_mutton_from_smoking",
+			"text": "title"
+		},
+		{
+			"style": "recipe",
+			"recipe": "minecraft:andesite_slab_from_andesite_stonecutting",
+			"text": "title"
+		},
+		{
+			"style": "recipe",
+			"recipe": "minecraft:netherite_chestplate_smithing",
+
+			"text": "title"
+		},
+		{
 			"text": "loremipsum"
 		}
 		
-	]
-	
+	],
+	"pages": [
+		"wiki.test1",
+		"wiki.test2"
+	]	
 }

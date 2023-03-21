@@ -3,9 +3,9 @@ package net.denanu.wiki.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
-import net.denanu.wiki.Wiki;
 import net.denanu.wiki.content.RootData;
 import net.denanu.wiki.gui.widgets.PageContentWidget;
+import net.denanu.wiki.gui.widgets.PageListWidget;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
@@ -14,11 +14,13 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 public class WikiScreen extends Screen {
 	public final RootData root;
 	private PageContentWidget contents;
+	private PageListWidget pageList;
 	protected final Screen parent;
 
 	protected WikiScreen(final Screen parent, final RootData root) {
@@ -40,10 +42,13 @@ public class WikiScreen extends Screen {
 				this.getContentTopY(),
 				this.getContentWidth(),
 				this.getContentHeight(),
-				this.root, this.itemRenderer
+				this.root, this.itemRenderer, this
 				);
+		this.pageList = new PageListWidget(this.client, 10, 10, 0, 10, 10);
+		this.pageList.setLeftPos(4);
+
 		this.addDrawableChild(this.contents);
-		Wiki.LOGGER.info("init");
+		this.addDrawableChild(this.pageList);
 	}
 
 	public int getContentTopX() {
@@ -63,7 +68,11 @@ public class WikiScreen extends Screen {
 	public void render(final MatrixStack matrices, final int mouseX, final int mouseY, final float delta) {
 		this.renderBackground(matrices);
 		super.render(matrices, mouseX, mouseY, delta);
-		DrawableHelper.drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 8, 16777215);
+
+		matrices.push();
+		matrices.scale(2f, 2f, 0);
+		DrawableHelper.drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 4, 2, 16777215);
+		matrices.pop();
 	}
 
 	@Override
@@ -88,5 +97,10 @@ public class WikiScreen extends Screen {
 	@Override
 	public void close() {
 		this.client.setScreen(this.parent);
+	}
+
+	@Override
+	public void renderTooltip(final MatrixStack matrices, final ItemStack stack, final int x, final int y) {
+		super.renderTooltip(matrices, stack, x, y);
 	}
 }

@@ -6,8 +6,12 @@
   "mixins": [
   ],
   "client": [
+    "LegacySmithingRecipeAccessor",
     "ModScreenMixin",
-    "ModsScreenAccessor"
+    "ModsScreenAccessor",
+    "SmithingTrimRecipeAccessor",
+    "SmithingTransformRecipeAccessor"
+    
   ],
   "injectors": {
     "defaultRequire": 1
