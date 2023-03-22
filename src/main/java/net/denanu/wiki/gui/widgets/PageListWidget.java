@@ -3,6 +3,7 @@ package net.denanu.wiki.gui.widgets;
 import net.denanu.wiki.gui.widgets.entries.WikiEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.util.math.MatrixStack;
 
 public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> implements AutoCloseable {
 
@@ -12,7 +13,24 @@ public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> imp
 	}
 
 	private void update() {
-		this.addEntry(new WikiEntry());
+		for (int i = 0; i < 64; i++) {
+			this.addEntry(new WikiEntry());
+		}
+	}
+
+	@Override
+	public int getRowWidth() {
+		return this.width;
+	}
+
+	@Override
+	protected int getScrollbarPositionX() {
+		return this.width;
+	}
+
+	@Override
+	public void render(final MatrixStack stack, final int mouseX, final int mouseY, final float delta) {
+		super.render(stack, mouseX, mouseY, delta);
 	}
 
 	@Override

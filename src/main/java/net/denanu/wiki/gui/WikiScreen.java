@@ -44,8 +44,8 @@ public class WikiScreen extends Screen {
 				this.getContentHeight(),
 				this.root, this.itemRenderer, this
 				);
-		this.pageList = new PageListWidget(this.client, 10, 10, 0, 10, 10);
-		this.pageList.setLeftPos(4);
+		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight(), 10);
+		this.pageList.setLeftPos(0);
 
 		this.addDrawableChild(this.contents);
 		this.addDrawableChild(this.pageList);
@@ -77,7 +77,7 @@ public class WikiScreen extends Screen {
 
 	@Override
 	public void renderBackground(final MatrixStack matrices) {
-		WikiScreen.overlayBackground(0, 0, this.width, this.height, 32, 32, 32, 255, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+		WikiScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 	}
 
 	static void overlayBackground(final int x1, final int y1, final int x2, final int y2, final int red, final int green, final int blue, final int alpha, final Identifier texture) {

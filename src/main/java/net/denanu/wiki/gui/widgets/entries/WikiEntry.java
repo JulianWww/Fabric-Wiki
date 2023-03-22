@@ -15,12 +15,12 @@ public class WikiEntry extends AlwaysSelectedEntryListWidget.Entry<WikiEntry> {
 
 	@Override
 	public Text getNarration() {
-		return null;
+		return Text.literal("hi");
 	}
 
 	@Override
 	public void render(final MatrixStack matrices, final int index, final int y, final int x, final int rowWidth, final int rowHeight, final int mouseX, final int mouseY, final boolean hovered, final float delta) {
 		final TextRenderer font = this.client.textRenderer;
-		font.draw(matrices, "hi", x + 3, y + 1, 0xFFFFFF);
+		font.draw(matrices, "hi", x, y, 16777215);
 	}
 }
