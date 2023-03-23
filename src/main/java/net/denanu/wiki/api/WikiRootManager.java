@@ -3,10 +3,13 @@ package net.denanu.wiki.api;
 import java.util.HashMap;
 
 import net.denanu.wiki.Wiki;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.CustomValue;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class WikiRootManager {
 	public static HashMap<String, Identifier> WIKI_ROOTS = new HashMap<>();
 

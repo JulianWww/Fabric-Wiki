@@ -2,6 +2,8 @@ package net.denanu.wiki.gui;
 
 import net.denanu.wiki.config.WikiConfig;
 import net.denanu.wiki.config.WikiConfigManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
+@Environment(value=EnvType.CLIENT)
 public class WikiOptionsScreen extends GameOptionsScreen {
 
 	private final Screen previous;

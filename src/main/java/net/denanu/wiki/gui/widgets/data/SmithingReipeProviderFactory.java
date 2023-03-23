@@ -2,6 +2,8 @@ package net.denanu.wiki.gui.widgets.data;
 
 import net.denanu.wiki.mixin.LegacySmithingRecipeAccessor;
 import net.denanu.wiki.mixin.SmithingTransformRecipeAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.recipe.LegacySmithingRecipe;
 import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.recipe.SmithingTransformRecipe;
@@ -9,6 +11,7 @@ import net.minecraft.recipe.SmithingTransformRecipe;
 // in preperation for 1.20
 // TODO: 1.20 add the new recipes
 
+@Environment(value=EnvType.CLIENT)
 public class SmithingReipeProviderFactory {
 	public static IngredientProvider build(final SmithingRecipe recipe) {
 		if (recipe instanceof final SmithingTransformRecipe r) {

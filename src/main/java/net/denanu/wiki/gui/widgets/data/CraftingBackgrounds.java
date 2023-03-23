@@ -2,8 +2,11 @@ package net.denanu.wiki.gui.widgets.data;
 
 import net.denanu.wiki.Wiki;
 import net.denanu.wiki.gui.widgets.PageContentWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public enum CraftingBackgrounds {
 	CRAFTING("textures/gui/crafting.png", PageContentWidget::renderCrafting, 134, 71),
 	FURNACE("textures/gui/furnace.png", PageContentWidget::renderSmelting, 101, 73),

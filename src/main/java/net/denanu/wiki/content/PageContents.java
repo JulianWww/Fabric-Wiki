@@ -9,8 +9,11 @@ import com.terraformersmc.modmenu.ModMenu;
 
 import net.denanu.wiki.Wiki;
 import net.denanu.wiki.uitls.JsonUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class PageContents {
 	private final List<PageElement> elements = new LinkedList<>();
 	private final List<String> subPages = new LinkedList<>();

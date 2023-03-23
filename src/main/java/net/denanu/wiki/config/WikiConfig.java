@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 import com.terraformersmc.modmenu.config.option.OptionConvertable;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.option.SimpleOption;
 
+@Environment(value=EnvType.CLIENT)
 public class WikiConfig {
 	public static SimpleOption<?>[] asOptions() {
 		final ArrayList<SimpleOption<?>> options = new ArrayList<>();

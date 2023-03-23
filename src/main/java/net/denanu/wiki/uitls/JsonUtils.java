@@ -10,8 +10,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import net.denanu.wiki.Wiki;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class JsonUtils {
 	public static String toWikiFile(final Identifier id) {
 		return JsonUtils.toWikiFilesBuilder(id).append(id.getPath()).append(".json").toString();

@@ -26,8 +26,11 @@ import com.terraformersmc.modmenu.config.option.EnumConfigOption;
 import com.terraformersmc.modmenu.config.option.StringSetConfigOption;
 
 import net.denanu.wiki.Wiki;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 
+@Environment(value=EnvType.CLIENT)
 public class WikiConfigManager {
 	private static File file;
 

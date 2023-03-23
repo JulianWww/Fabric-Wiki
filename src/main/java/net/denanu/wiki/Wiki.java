@@ -3,13 +3,21 @@ package net.denanu.wiki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fabricmc.api.ModInitializer;
+import net.denanu.wiki.api.WikiRootManager;
+import net.denanu.wiki.config.WikiConfigManager;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-public class Wiki implements ModInitializer {
-	public static final String MOD_ID = "wiki";
+@Environment(value=EnvType.CLIENT)
+public class Wiki implements ClientModInitializer {
+	public static String MOD_ID = "wiki";
 	public static final Logger LOGGER = LoggerFactory.getLogger(Wiki.MOD_ID);
 
 	@Override
-	public void onInitialize() {
+	public void onInitializeClient() {
+		WikiConfigManager.initializeConfig();
+		WikiRootManager.setup();
+
 	}
 }

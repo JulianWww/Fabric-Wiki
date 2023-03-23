@@ -11,6 +11,8 @@ import net.denanu.wiki.gui.widgets.PageContentWidget;
 import net.denanu.wiki.gui.widgets.PageListWidget;
 import net.denanu.wiki.gui.widgets.buttons.TexturedButtonWidgetNoFocus;
 import net.denanu.wiki.search.SearchManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -28,6 +30,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
+@Environment(value=EnvType.CLIENT)
 public class WikiScreen extends Screen {
 	public final RootData root;
 	public PageContentWidget contents;

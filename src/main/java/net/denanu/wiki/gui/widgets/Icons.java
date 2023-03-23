@@ -4,10 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.denanu.wiki.Wiki;
 import net.denanu.wiki.uitls.RenderUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public enum Icons {
 	SUB_PAGES_CLOSED(Identifier.of(Wiki.MOD_ID, "textures/gui/pageselection.png"),  0, 0, 32, 32, 10, 5, 14, 22, 64, 64),
 	SUB_PAGES_SHOWN( Identifier.of(Wiki.MOD_ID, "textures/gui/pageselection.png"), 32, 0, 32, 32, 5, 10, 22, 14, 64, 64);

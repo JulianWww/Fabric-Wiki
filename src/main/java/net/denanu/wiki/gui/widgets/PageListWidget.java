@@ -4,10 +4,13 @@ import java.util.LinkedList;
 
 import net.denanu.wiki.gui.WikiScreen;
 import net.denanu.wiki.gui.widgets.entries.WikiEntry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
+@Environment(value=EnvType.CLIENT)
 public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> implements AutoCloseable {
 	private final WikiScreen screen;
 

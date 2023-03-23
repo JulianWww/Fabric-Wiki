@@ -10,6 +10,8 @@ import com.google.gson.JsonObject;
 
 import net.denanu.wiki.gui.widgets.PageContentWidget.Style;
 import net.denanu.wiki.uitls.StringUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -18,6 +20,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class PageElement {
 	private Style style;
 	private String translationKey;

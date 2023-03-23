@@ -10,8 +10,11 @@ import net.denanu.wiki.Wiki;
 import net.denanu.wiki.uitls.IntComparator;
 import net.denanu.wiki.uitls.JsonUtils;
 import net.denanu.wiki.uitls.StringUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class SearchEntry {
 	private List<String> keywords;
 	private int distance = 10;

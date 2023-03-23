@@ -9,8 +9,11 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import net.denanu.wiki.gui.widgets.entries.WikiEntry;
 import net.denanu.wiki.uitls.JsonUtils;
 import net.denanu.wiki.uitls.ResourceUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class SearchManager {
 	private final List<SearchEntry> entries;
 	public static final LevenshteinDistance distanceFactory = new LevenshteinDistance();

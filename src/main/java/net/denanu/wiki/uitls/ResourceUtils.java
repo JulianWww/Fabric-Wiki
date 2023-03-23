@@ -5,6 +5,10 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(value=EnvType.CLIENT)
 public class ResourceUtils{
 	public static File[] getResourceFolderFiles (final String folder) {
 		final ClassLoader loader = Thread.currentThread().getContextClassLoader();

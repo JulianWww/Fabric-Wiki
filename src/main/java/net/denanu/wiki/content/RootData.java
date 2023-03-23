@@ -9,10 +9,13 @@ import com.terraformersmc.modmenu.ModMenu;
 import net.denanu.wiki.Wiki;
 import net.denanu.wiki.gui.widgets.entries.WikiEntry;
 import net.denanu.wiki.uitls.JsonUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
+@Environment(value=EnvType.CLIENT)
 public class RootData extends PageContents {
 	private Text title = Text.literal("tag missing");
 	private ArrayList<WikiEntry> children;

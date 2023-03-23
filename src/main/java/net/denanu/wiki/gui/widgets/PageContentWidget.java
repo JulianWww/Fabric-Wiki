@@ -12,6 +12,8 @@ import net.denanu.wiki.gui.widgets.data.CraftingBackgrounds;
 import net.denanu.wiki.gui.widgets.data.IngredientProvider;
 import net.denanu.wiki.gui.widgets.data.SmithingReipeProviderFactory;
 import net.denanu.wiki.uitls.SetUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -33,6 +35,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.annotation.Debug;
 import net.minecraft.util.collection.DefaultedList;
 
+@Environment(value=EnvType.CLIENT)
 public class PageContentWidget extends ScrollableWidget {
 	private PageContents contents;
 	private int contentHeight;

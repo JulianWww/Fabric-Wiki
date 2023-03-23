@@ -1,5 +1,9 @@
 package net.denanu.wiki.uitls;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(value=EnvType.CLIENT)
 public class StringUtils {
 	public static String translate(final String translationKey, final Object... args)
 	{

@@ -1,10 +1,13 @@
 package net.denanu.wiki.gui.widgets.buttons;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+@Environment(value=EnvType.CLIENT)
 public class TexturedButtonWidgetNoFocus extends TexturedButtonWidget {
 	public TexturedButtonWidgetNoFocus(final int x, final int y, final int width, final int height, final int u, final int v, final Identifier texture, final ButtonWidget.PressAction pressAction) {
 		super(x, y, width, height, u, v, texture, pressAction);
