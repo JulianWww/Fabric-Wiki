@@ -33,7 +33,7 @@ for idx in range(buttons):
 cv2.imwrite(guiPath + "pageselection.png", np.concatenate(out, 0))
 
 ## Generate Small Buttons
-buttons = ["home", "home"]
+buttons = ["home"]
 base = mc.load("data/small_button.png")
 
 out = []
