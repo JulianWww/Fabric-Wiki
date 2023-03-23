@@ -10,6 +10,7 @@ except FileExistsError: pass
 
 filePath = download("https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19.3/assets/minecraft/textures/gui/resource_packs.png", out=tmpDir)
 guiPath = mc.assets("wiki") + "/textures/gui/"
+thisPath = "generators/textures/"
 
 ## Generate wiki selection buttons
 
@@ -34,11 +35,11 @@ cv2.imwrite(guiPath + "pageselection.png", np.concatenate(out, 0))
 
 ## Generate Small Buttons
 buttons = ["home"]
-base = mc.load("data/small_button.png")
+base = mc.load(thisPath + "data/small_button.png")
 
 out = []
 for button in buttons:
-  mask = mc.load(f"data/{button}.png")
+  mask = mc.load(f"{thisPath}data/{button}.png")
   img = np.copy(base)
   img = mc.stackImages(img, mask, 0, 0)
   img = mc.stackImages(img, mask, 20, 0)
