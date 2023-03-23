@@ -35,12 +35,12 @@ jobs:
           source: "maven/"
           target: "/media/B/html/"
       - name: "Upload to CurseForge"
-        if: ${{ steps.all.outputs.debug }} == "_false"
+        if: ${{ steps.all.outputs.dev }} == "_false"
         uses: itsmeow/curseforge-upload@v3
         with:
           file_path: "build/libs/BlockHighlighting-${{ steps.all.outputs.minecraft_version }}-${{ steps.all.outputs.mod_version }}.jar"
           game_endpoint: "minecraft"
           relations: "fabric-api:requiredDependency"
-          game_versions: "Minecraft 1.19:1.19.2,Java 17,Fabric"
-          project_id: "770218"
+          game_versions: "Minecraft {{ steps.all.outputs.minecraft_version }},Java 17,Fabric"
+          project_id: "841454"
           token: "${{ secrets.CF_API_TOKEN }}"
