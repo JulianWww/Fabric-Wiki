@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
+import net.denanu.wiki.Wiki;
 import net.denanu.wiki.uitls.IntComparator;
 import net.denanu.wiki.uitls.JsonUtils;
 import net.denanu.wiki.uitls.StringUtils;
@@ -19,13 +20,13 @@ public class SearchEntry {
 	public SearchEntry(final File file, final String namespace) {
 		final JsonObject json = JsonUtils.load(file);
 		if (json.has("keywords")) {
-			this.keywords = json.getAsJsonArray("keywords").asList().stream().parallel().map(element -> StringUtils.translate(new Identifier(element.getAsString()).toTranslationKey("keyword"))).toList();
+			this.keywords = json.getAsJsonArray("keywords").asList().stream().parallel().map(element -> StringUtils.translate(new Identifier(element.getAsString()).toTranslationKey("keyword")).toLowerCase()).toList();
 		}
 		else {
 			this.keywords = new ArrayList<>(1);
 		}
 		this.id = SearchEntry.getId(file, namespace);
-		this.keywords.add(StringUtils.translate(this.id.toTranslationKey("keyword")));
+		this.keywords.add(StringUtils.translate(this.id.toTranslationKey("wiki")));
 	}
 
 	private static Identifier getId(final File file, final String namespace) {
@@ -33,7 +34,18 @@ public class SearchEntry {
 	}
 
 	public void calculateDistanceTo(final String str) {
-		this.distance = this.keywords.stream().parallel().map(word -> SearchManager.distanceFactory.apply(word, str)).min(new IntComparator()).orElseGet(() -> 10);
+		this.distance = this.keywords.stream()
+				.parallel()
+				.map(word -> {
+					if (str.length() < word.length()) {
+						word = word.substring(0, str.length());
+					}
+
+					return SearchManager.distanceFactory.apply(word, str);
+				})
+				.min(new IntComparator())
+				.orElseGet(() -> 10);
+		Wiki.LOGGER.info(Integer.toString(this.distance));
 	}
 
 	public int getDistance() {

@@ -57,7 +57,7 @@ public class WikiScreen extends Screen {
 				this.getContentHeight(),
 				this.root, this.itemRenderer, this
 				);
-		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight() - 22, 16, this);
+		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight() - 22, 16, this, this.pageList);
 		this.pageList.setLeftPos(0);
 
 		this.addDrawableChild(this.contents);

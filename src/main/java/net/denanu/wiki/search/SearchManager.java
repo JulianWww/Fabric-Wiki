@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 
 public class SearchManager {
 	private final List<SearchEntry> entries;
-	public static final LevenshteinDistance distanceFactory = new LevenshteinDistance(10);
+	public static final LevenshteinDistance distanceFactory = new LevenshteinDistance();
 
 	public SearchManager(final Identifier root) {
 		final Stream<File> files = ResourceUtils.getResourceFolderFilesStream(JsonUtils.toWikiFiles(root));
@@ -22,8 +22,8 @@ public class SearchManager {
 
 	public List<WikiEntry> filter(final String str) {
 		return this.entries.stream().parallel().filter(entry -> {
-			entry.calculateDistanceTo(str);
-			return entry.getDistance() < 10;
+			entry.calculateDistanceTo(str.toLowerCase());
+			return entry.getDistance() <= (int)(str.length() * 0.5 + 1);
 		}).sorted(new SearchEntryComparator()).map(SearchEntry::getId).map(id -> new WikiEntry(id, WikiEntry.Type.FILTERED)).toList();
 	}
 }

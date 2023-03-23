@@ -11,12 +11,23 @@ import net.minecraft.client.util.math.MatrixStack;
 public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> implements AutoCloseable {
 	private final WikiScreen screen;
 
-	public PageListWidget(final MinecraftClient minecraftClient, final int width, final int height, final int top, final int bottom, final int itemHeight, final WikiScreen screen) {
+	public PageListWidget(final MinecraftClient minecraftClient, final int width, final int height, final int top, final int bottom, final int itemHeight, final WikiScreen screen, final PageListWidget pageList) {
 		super(minecraftClient, width, height, top, bottom, itemHeight);
-		this.replaceEntries(screen.root.getChildren());
 		this.screen = screen;
+		if (pageList != null) {
+			this.replaceEntries(pageList.children());
+			this.setSelected(pageList.getSelectedOrNull());
+			this.setFocused(pageList.getFocused());
 
-		screen.root.getChildren().stream().forEach(child -> child.setParent(this));
+			pageList.children().stream().parallel().forEach(element -> {
+				element.setParent(this);
+			});
+		}
+		else {
+			this.replaceEntries(screen.root.getChildren());
+
+			screen.root.getChildren().stream().forEach(child -> child.setParent(this));
+		}
 	}
 
 	@Override
@@ -64,6 +75,10 @@ public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> imp
 	}
 
 	public void fillterPageList(final String str) {
-		this.replaceEntries(this.screen.searcher.filter(str));
+		if (str.length() > 0) {
+			this.replaceEntries(this.screen.searcher.filter(str));
+		} else {
+			this.updatePageList(this.getSelectedOrNull());
+		}
 	}
 }
