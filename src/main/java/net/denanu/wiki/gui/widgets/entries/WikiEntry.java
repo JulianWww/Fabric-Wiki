@@ -28,21 +28,27 @@ public class WikiEntry extends AlwaysSelectedEntryListWidget.Entry<WikiEntry> {
 	private int x = 0;
 	private int y = 0;
 	private final int indent;
+	private final Type type;
 
-	public WikiEntry(final Identifier page, final PageListWidget parent, final int indnet) {
+	public WikiEntry(final Identifier page, final PageListWidget parent, final int indnet, final Type type) {
 		this.client = MinecraftClient.getInstance();
 		this.page = page;
 		this.pageContent = PageContents.fromJson(page);
 		this.parent = parent;
 		this.indent = indnet;
+		this.type = type;
 	}
 
-	public WikiEntry(final String id, final PageListWidget parent, final int indent) {
-		this(new Identifier(id), parent, indent);
+	public WikiEntry(final Identifier page, final Type type) {
+		this(page, null, 0, type);
+	}
+
+	public WikiEntry(final String id, final PageListWidget parent, final int indent, final Type type) {
+		this(new Identifier(id), parent, indent, type);
 	}
 
 	public WikiEntry(final String id) {
-		this(new Identifier(id), null, 0);
+		this(new Identifier(id), null, 0, Type.NORMAL);
 	}
 
 	public void setParent(final PageListWidget parent) {
@@ -60,17 +66,19 @@ public class WikiEntry extends AlwaysSelectedEntryListWidget.Entry<WikiEntry> {
 
 	@Override
 	public void render(final MatrixStack stack, final int index, final int y, int x, final int rowWidth, final int rowHeight, final int mouseX, final int mouseY, final boolean hovered, final float delta) {
-		x += this.indent;
-		this.x = x;
-		this.y = y;
-		if (this.pageContent.getSubPages().size() > 0) {
-			this.renderSubPageShowButton(stack, y, x, mouseX, mouseY, hovered);
+		if (this.type == Type.NORMAL) {
+			x += this.indent;
+			if (this.pageContent.getSubPages().size() > 0) {
+				this.renderSubPageShowButton(stack, y, x, mouseX, mouseY, hovered);
+			}
+			for (int idx = 0; idx < this.indent; idx += 5) {
+				WikiScreen.drawVerticalLine(stack, x + 2 + idx, y-3, y+14, 0x55FFFFFF);
+			}
 		}
 		this.renderTitle(stack, x + 16, y + 2);
 
-		for (int idx = 0; idx < this.indent; idx += 5) {
-			WikiScreen.drawVerticalLine(stack, x + 2 + idx, y-3, y+14, 0x55FFFFFF);
-		}
+		this.x = x;
+		this.y = y;
 	}
 
 	private void renderTitle(final MatrixStack stack, final int x, final int y) {
@@ -100,7 +108,7 @@ public class WikiEntry extends AlwaysSelectedEntryListWidget.Entry<WikiEntry> {
 	}
 
 	private WikiEntry of(final String id) {
-		return new WikiEntry(id, this.parent, this.indent + 5);
+		return new WikiEntry(id, this.parent, this.indent + 5, Type.NORMAL);
 	}
 
 	private void loadEntriesIfNeeded() {
@@ -120,5 +128,10 @@ public class WikiEntry extends AlwaysSelectedEntryListWidget.Entry<WikiEntry> {
 		else {
 			this.entries = null;
 		}
+	}
+
+	public enum Type {
+		NORMAL,
+		FILTERED;
 	}
 }

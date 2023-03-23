@@ -34,7 +34,7 @@ public class WikiScreen extends Screen {
 	private PageListWidget pageList;
 	protected final Screen parent;
 	private TextFieldWidget searchBox;
-	private final SearchManager searcher;
+	public final SearchManager searcher;
 
 	protected WikiScreen(final Screen parent, final RootData root, final Identifier rootId) {
 		super(root.getTitle());
@@ -69,6 +69,7 @@ public class WikiScreen extends Screen {
 
 	private void addSearchBar() {
 		this.searchBox = new TextFieldWidget(this.textRenderer, 2, 2, this.leftWidth() - 3, 20, this.searchBox, Text.translatable("modmenu.search"));
+		this.searchBox.setChangedListener(str -> this.pageList.fillterPageList(str));
 		this.addSelectableChild(this.searchBox);
 	}
 

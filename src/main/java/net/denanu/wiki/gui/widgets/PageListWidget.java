@@ -62,4 +62,8 @@ public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> imp
 			this.setSelected(updator);
 		}
 	}
+
+	public void fillterPageList(final String str) {
+		this.replaceEntries(this.screen.searcher.filter(str));
+	}
 }

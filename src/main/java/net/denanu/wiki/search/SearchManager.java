@@ -1,15 +1,29 @@
 package net.denanu.wiki.search;
 
 import java.io.File;
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
+
+import net.denanu.wiki.gui.widgets.entries.WikiEntry;
 import net.denanu.wiki.uitls.JsonUtils;
 import net.denanu.wiki.uitls.ResourceUtils;
 import net.minecraft.util.Identifier;
 
 public class SearchManager {
+	private final List<SearchEntry> entries;
+	public static final LevenshteinDistance distanceFactory = new LevenshteinDistance(10);
+
 	public SearchManager(final Identifier root) {
 		final Stream<File> files = ResourceUtils.getResourceFolderFilesStream(JsonUtils.toWikiFiles(root));
-		files.map(file -> new SearchEntry(file, root.getNamespace())).toList();
+		this.entries = files.map(file -> new SearchEntry(file, root.getNamespace())).toList();
+	}
+
+	public List<WikiEntry> filter(final String str) {
+		return this.entries.stream().parallel().filter(entry -> {
+			entry.calculateDistanceTo(str);
+			return entry.getDistance() < 10;
+		}).sorted(new SearchEntryComparator()).map(SearchEntry::getId).map(id -> new WikiEntry(id, WikiEntry.Type.FILTERED)).toList();
 	}
 }

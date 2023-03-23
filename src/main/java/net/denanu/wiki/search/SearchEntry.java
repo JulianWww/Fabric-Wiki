@@ -6,13 +6,15 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
+import net.denanu.wiki.uitls.IntComparator;
 import net.denanu.wiki.uitls.JsonUtils;
 import net.denanu.wiki.uitls.StringUtils;
 import net.minecraft.util.Identifier;
 
 public class SearchEntry {
-	List<String> keywords;
-
+	private List<String> keywords;
+	private int distance = 10;
+	private final Identifier id;
 
 	public SearchEntry(final File file, final String namespace) {
 		final JsonObject json = JsonUtils.load(file);
@@ -22,14 +24,23 @@ public class SearchEntry {
 		else {
 			this.keywords = new ArrayList<>(1);
 		}
-		this.keywords.add(StringUtils.translate(SearchEntry.getId(file, namespace).toTranslationKey("keyword")));
+		this.id = SearchEntry.getId(file, namespace);
+		this.keywords.add(StringUtils.translate(this.id.toTranslationKey("keyword")));
 	}
 
 	private static Identifier getId(final File file, final String namespace) {
 		return Identifier.of(namespace, StringUtils.removeLast(file.getName(), 5));
 	}
 
-	public int calculateDistanceTo(final String str) {
-		return 0;
+	public void calculateDistanceTo(final String str) {
+		this.distance = this.keywords.stream().parallel().map(word -> SearchManager.distanceFactory.apply(word, str)).min(new IntComparator()).orElseGet(() -> 10);
+	}
+
+	public int getDistance() {
+		return this.distance;
+	}
+
+	public Identifier getId() {
+		return this.id;
 	}
 }
