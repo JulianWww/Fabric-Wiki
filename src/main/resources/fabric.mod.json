@@ -1,29 +1,35 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "wiki",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Ingame Wiki",
+  "description": "Ingame Wiki pages for Minecraft mods",
   "authors": [
-    "Me!"
+    "Denanu"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "issues": "https://github.com/JulianWww/Fabric-Wiki/issues",
+    "sources": "https://github.com/JulianWww/Fabric-Wiki"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/wiki/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "client": [
+      "net.denanu.wiki.WikiClient"
+    ],
+    "main":[
+      "net.denanu.wiki.Wiki"
+    ],
+    "modmenu": [
+      "net.denanu.wiki.compat.modmenu.Config"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "wiki.mixins.json"
   ],
 
   "depends": {
@@ -34,5 +40,14 @@
   },
   "suggests": {
     "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+        "badges": [ "library" ],
+        "update_checker": false
+    },
+    "wiki": {
+    	"root": "root"
+    }
   }
 }
