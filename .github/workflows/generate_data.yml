@@ -22,7 +22,7 @@ jobs:
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget mc-generator-utils
+          python3 -m pip install wget numpy opencv-python mc-generator-utils
         
       - name: Generate
         run: |
