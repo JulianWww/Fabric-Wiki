@@ -41,7 +41,9 @@ public class PageListWidget extends AlwaysSelectedEntryListWidget<WikiEntry> imp
 	@Override
 	public void setSelected(final WikiEntry entry) {
 		super.setSelected(entry);
-		this.screen.contents.setContents(entry.getContent());
+		if (entry != null) {
+			this.screen.contents.setContents(entry.getContent());
+		}
 	}
 
 	public void updatePageList(final WikiEntry updator) {

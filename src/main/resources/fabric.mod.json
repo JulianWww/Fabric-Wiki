@@ -16,7 +16,7 @@
   "license": "CC0-1.0",
   "icon": "assets/wiki/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "net.denanu.wiki.WikiClient"

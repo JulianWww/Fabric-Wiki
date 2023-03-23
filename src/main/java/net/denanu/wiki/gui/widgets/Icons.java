@@ -12,6 +12,8 @@ public enum Icons {
 	SUB_PAGES_CLOSED(Identifier.of(Wiki.MOD_ID, "textures/gui/pageselection.png"),  0, 0, 32, 32, 10, 5, 14, 22, 64, 64),
 	SUB_PAGES_SHOWN( Identifier.of(Wiki.MOD_ID, "textures/gui/pageselection.png"), 32, 0, 32, 32, 5, 10, 22, 14, 64, 64);
 
+	public static Identifier SMALL_BUTTONS = Identifier.of(Wiki.MOD_ID, "textures/gui/small_buttons.png");
+
 	private Identifier id;
 	private int x, y, w, h, boxX, boxY, boxW, boxH, texX, texY;
 

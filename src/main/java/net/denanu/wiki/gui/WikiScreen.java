@@ -6,10 +6,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
 import net.denanu.wiki.content.RootData;
+import net.denanu.wiki.gui.widgets.Icons;
 import net.denanu.wiki.gui.widgets.PageContentWidget;
 import net.denanu.wiki.gui.widgets.PageListWidget;
+import net.denanu.wiki.gui.widgets.buttons.TexturedButtonWidgetNoFocus;
+import net.denanu.wiki.search.SearchManager;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.GameRenderer;
@@ -18,6 +24,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 
@@ -26,17 +33,19 @@ public class WikiScreen extends Screen {
 	public PageContentWidget contents;
 	private PageListWidget pageList;
 	protected final Screen parent;
+	private TextFieldWidget searchBox;
+	private final SearchManager searcher;
 
-	protected WikiScreen(final Screen parent, final RootData root) {
+	protected WikiScreen(final Screen parent, final RootData root, final Identifier rootId) {
 		super(root.getTitle());
 		this.root = root;
 		this.parent = parent;
-
+		this.searcher = new SearchManager(rootId);
 	}
 
 	public static WikiScreen of(final Identifier root, final ModsScreen screen) {
 		final RootData rootData = RootData.fromJson(root);
-		return new WikiScreen(screen, rootData);
+		return new WikiScreen(screen, rootData, root);
 	}
 
 	@Override
@@ -48,11 +57,52 @@ public class WikiScreen extends Screen {
 				this.getContentHeight(),
 				this.root, this.itemRenderer, this
 				);
-		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight(), 16, this);
+		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight() - 22, 16, this);
 		this.pageList.setLeftPos(0);
 
 		this.addDrawableChild(this.contents);
 		this.addDrawableChild(this.pageList);
+
+		this.addHomeButton();
+		this.addSearchBar();
+	}
+
+	private void addSearchBar() {
+		this.searchBox = new TextFieldWidget(this.textRenderer, 2, 2, this.leftWidth() - 3, 20, this.searchBox, Text.translatable("modmenu.search"));
+		this.addSelectableChild(this.searchBox);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		this.searchBox.tick();
+	}
+
+	@Override
+	public boolean charTyped(final char chr, final int keyCode) {
+		return this.searchBox.charTyped(chr, keyCode);
+	}
+
+	private void addHomeButton() {
+		final int y = this.getContentTopY() + this.getContentHeight() - 20;
+		final TexturedButtonWidgetNoFocus homeButton = new TexturedButtonWidgetNoFocus(2, y, 20, 20, 0, 0, 20, Icons.SMALL_BUTTONS, 20, 40, button -> {
+			this.contents.setContents(this.root);
+			this.pageList.setSelected(null);
+		});
+		homeButton.setTooltip(Tooltip.of(Text.translatable("wiki.home")));
+		this.addDrawableChild(homeButton);
+
+		this.addDrawableChild(
+				ButtonWidget.builder(Text.translatable("category.modmenu.name"), b -> {this.close();})
+				.position(24, y)
+				.size(this.getContentTopX() - 28, 20)
+				.tooltip(Tooltip.of(Text.translatable("wiki.return_to_modmenu")))
+				.build()
+				);
+	}
+
+	public int leftWidth() {
+		return this.getContentTopX() - 4;
 	}
 
 	public int getContentTopX() {
@@ -72,6 +122,7 @@ public class WikiScreen extends Screen {
 	public void render(final MatrixStack matrices, final int mouseX, final int mouseY, final float delta) {
 		this.renderBackground(matrices);
 		super.render(matrices, mouseX, mouseY, delta);
+		this.searchBox.render(matrices, mouseX, mouseY, delta);
 
 		matrices.push();
 		matrices.scale(2f, 2f, 1f);
