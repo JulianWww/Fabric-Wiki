@@ -26,7 +26,7 @@ dependencies {
 	modCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	
 	implementation 'org.apache.commons:commons-text:1.10.0'
-	include 'org.apache.commons:commons-text:jar:1.10.0'
+	include 'org.apache.commons:commons-text:1.10.0'
 }
 
 group = project.group + "." + project.archives_base_name
