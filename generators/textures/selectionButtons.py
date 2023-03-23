@@ -2,13 +2,16 @@ from wget import download
 from os import mkdir
 import numpy as np
 import cv2
+import mc_generator_utils as mc
 
 tmpDir = ".tmp"
 try: mkdir(tmpDir)
 except FileExistsError: pass
 
 filePath = download("https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.19.3/assets/minecraft/textures/gui/resource_packs.png", out=tmpDir)
-guiPath = "./src/main/resources/assets/wiki/textures/gui/"
+guiPath = mc.assets("wiki") + "/textures/gui/"
+
+## Generate wiki selection buttons
 
 img = cv2.imread(filePath, cv2.IMREAD_UNCHANGED)
 
@@ -28,3 +31,17 @@ for idx in range(buttons):
   out.append(generateButtonGroup(img, idx))
 
 cv2.imwrite(guiPath + "pageselection.png", np.concatenate(out, 0))
+
+## Generate Small Buttons
+buttons = ["home", "home"]
+base = mc.load("data/small_button.png")
+
+out = []
+for button in buttons:
+  mask = mc.load(f"data/{button}.png")
+  img = np.copy(base)
+  img = mc.stackImages(img, mask, 0, 0)
+  img = mc.stackImages(img, mask, 20, 0)
+  out.append(img)
+
+cv2.imwrite(guiPath + "small_buttons.png", np.concatenate(out, axis=1))

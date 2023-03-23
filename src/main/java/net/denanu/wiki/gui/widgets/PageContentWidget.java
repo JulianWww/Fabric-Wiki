@@ -34,7 +34,7 @@ import net.minecraft.util.annotation.Debug;
 import net.minecraft.util.collection.DefaultedList;
 
 public class PageContentWidget extends ScrollableWidget {
-	private final PageContents contents;
+	private PageContents contents;
 	private int contentHeight;
 	private final ItemRenderer itemRenderer;
 	private final WikiScreen screen;
@@ -85,6 +85,10 @@ public class PageContentWidget extends ScrollableWidget {
 
 	@Override
 	protected void appendClickableNarrations(final NarrationMessageBuilder var1) {
+	}
+
+	public void setContents(final PageContents contents) {
+		this.contents = contents;
 	}
 
 	public enum Style {

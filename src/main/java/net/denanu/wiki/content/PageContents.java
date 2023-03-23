@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.terraformersmc.modmenu.ModMenu;
+
+import net.denanu.wiki.Wiki;
+import net.denanu.wiki.uitls.JsonUtils;
+import net.minecraft.util.Identifier;
 
 public class PageContents {
 	private final List<PageElement> elements = new LinkedList<>();
@@ -22,6 +27,18 @@ public class PageContents {
 	}
 
 	public PageContents() {}
+
+	public static PageContents fromJson(final Identifier id) {
+		try {
+			final JsonObject json = JsonUtils.loadAssetJson(ModMenu.GSON, id);
+			return new PageContents(json);
+
+		}
+		catch (final Exception e) {
+			Wiki.LOGGER.error("wiki is missing file " + JsonUtils.toWikiFile(id) + " because", e);
+		}
+		return new PageContents();
+	}
 
 	public List<PageElement> getElements() {
 		return this.elements;

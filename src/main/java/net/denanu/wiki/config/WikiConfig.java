@@ -30,4 +30,8 @@ public class WikiConfig {
 		}
 		return options.stream().toArray(SimpleOption[]::new);
 	}
+
+	public static int getColor() {
+		return 0xFFFFFFFF;
+	}
 }

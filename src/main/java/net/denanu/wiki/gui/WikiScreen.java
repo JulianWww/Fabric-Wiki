@@ -1,5 +1,7 @@
 package net.denanu.wiki.gui;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 
@@ -9,6 +11,7 @@ import net.denanu.wiki.gui.widgets.PageListWidget;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -16,10 +19,11 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
 public class WikiScreen extends Screen {
 	public final RootData root;
-	private PageContentWidget contents;
+	public PageContentWidget contents;
 	private PageListWidget pageList;
 	protected final Screen parent;
 
@@ -44,7 +48,7 @@ public class WikiScreen extends Screen {
 				this.getContentHeight(),
 				this.root, this.itemRenderer, this
 				);
-		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight(), 10);
+		this.pageList = new PageListWidget(this.client, this.getContentTopX() - 4, this.getContentHeight(), this.getContentTopY(), this.getContentTopY() + this.getContentHeight(), 16, this);
 		this.pageList.setLeftPos(0);
 
 		this.addDrawableChild(this.contents);
@@ -70,7 +74,7 @@ public class WikiScreen extends Screen {
 		super.render(matrices, mouseX, mouseY, delta);
 
 		matrices.push();
-		matrices.scale(2f, 2f, 0);
+		matrices.scale(2f, 2f, 1f);
 		DrawableHelper.drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 4, 2, 16777215);
 		matrices.pop();
 	}
@@ -102,5 +106,42 @@ public class WikiScreen extends Screen {
 	@Override
 	public void renderTooltip(final MatrixStack matrices, final ItemStack stack, final int x, final int y) {
 		super.renderTooltip(matrices, stack, x, y);
+	}
+
+	public static void drawVerticalLine(final MatrixStack matrices, final int x, final int y1, final int y2, final int color) {
+		DrawableHelper.drawVerticalLine(matrices, x, y1, y2, color);
+	}
+
+	public static void fill(final MatrixStack matrices, final int x1, final int y1, final int x2, final int y2, final int color) {
+		WikiScreen.fill(matrices, x1, y1, x2, y2, 0, color);
+	}
+
+	public static void fill(final MatrixStack matrices, int x1, int y1, int x2, int y2, final int z, final int color) {
+		int i;
+		final Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+		if (x1 < x2) {
+			i = x1;
+			x1 = x2;
+			x2 = i;
+		}
+		if (y1 < y2) {
+			i = y1;
+			y1 = y2;
+			y2 = i;
+		}
+		final float f = ColorHelper.Argb.getAlpha(color) / 255.0f;
+		final float g = ColorHelper.Argb.getRed(color) / 255.0f;
+		final float h = ColorHelper.Argb.getGreen(color) / 255.0f;
+		final float j = ColorHelper.Argb.getBlue(color) / 255.0f;
+		final BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		RenderSystem.disableBlend();
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(matrix4f, x1, y1, z).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix4f, x1, y2, z).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix4f, x2, y2, z).color(g, h, j, f).next();
+		bufferBuilder.vertex(matrix4f, x2, y1, z).color(g, h, j, f).next();
+		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+		RenderSystem.disableBlend();
 	}
 }

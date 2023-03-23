@@ -43,7 +43,7 @@
 		
 	],
 	"pages": [
-		"wiki.test1",
-		"wiki.test2"
+		"wiki:test1",
+		"wiki:test2"
 	]	
 }

@@ -12,7 +12,7 @@ import com.google.gson.JsonParser;
 import net.minecraft.util.Identifier;
 
 public class JsonUtils {
-	private static String toWikiFile(final Identifier id) {
+	public static String toWikiFile(final Identifier id) {
 		return new StringBuilder().append("assets/").append(id.getNamespace()).append("/wiki/").append(id.getPath()).append(".json").toString();
 	}
 

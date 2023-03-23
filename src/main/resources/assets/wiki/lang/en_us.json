@@ -2,5 +2,7 @@
 	"wiki.options": "Wiki Options",
 	"wiki.wiki.open": "Wiki",
 	"loremipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean finibus tincidunt lectus, sit amet suscipit nisi finibus eget. Aliquam et magna non urna condimentum dignissim. Curabitur eleifend eros magna, sed egestas tellus tempor eget. Ut varius dictum justo, ac finibus purus venenatis sed. Aenean accumsan non risus a tempus. Quisque eget efficitur ligula. Donec id nulla vel metus elementum vulputate ac eu turpis.",
-	"title": "Test Title"
+	"title": "Test Title",
+	"wiki.wiki.test1": "Testpage 1",
+	"wiki.wiki.test2": "Testpage 2"
 	}
