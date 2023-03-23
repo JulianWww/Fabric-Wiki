@@ -1,4 +1,5 @@
 # Fabric Example Mod
+[![build](https://github.com/JulianWww/Fabric-Wiki/actions/workflows/build.yml/badge.svg)](https://github.com/JulianWww/Fabric-Wiki/actions/workflows/build.yml)
 
 ## Setup
 
