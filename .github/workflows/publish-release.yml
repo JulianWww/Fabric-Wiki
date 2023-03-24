@@ -29,7 +29,7 @@ jobs:
       - name: "List verstion"
         id: versioning
         run: |
-          echo "::set-output name=version::$(ls build/libs)"
+          echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
           echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
 
 #      - name: "Publish maven to wandhoven.ddns.net"
