@@ -33,7 +33,6 @@ jobs:
           # skip_untranslated_strings: true
 
           skip_untranslated_strings: true
-          skip_untranslated_files: true
 
           source: src/main/resources/assets/wiki/lang/en_us.json
           translation: src/main/resources/assets/wiki/lang/%locale%.json
