@@ -47,4 +47,4 @@ jobs:
           game_versions: "Minecraft ${{ steps.all.outputs.minecraft_version_short }}:${{ steps.all.outputs.minecraft_version }},Java 17,Fabric"
           project_id: "841454"
           token: "${{ secrets.CF_API_TOKEN }}"
-          release_type: "alpha"
+          release_type: "${{ steps.all.outputs.type }}"
