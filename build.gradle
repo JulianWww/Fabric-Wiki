@@ -33,7 +33,7 @@ group = project.group + "." + project.archives_base_name
 archivesBaseName = project.archives_base_name + '-' + project.minecraft_version
 version = project.mod_version
 
-if (project.dev == "true") {
+if (project.type != "release") {
 	project.version += "." + Long.toString(new Date().getTime())
 }
 

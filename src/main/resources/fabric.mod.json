@@ -19,9 +19,6 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "net.denanu.wiki.WikiClient"
-    ],
-    "main":[
       "net.denanu.wiki.Wiki"
     ],
     "modmenu": [
