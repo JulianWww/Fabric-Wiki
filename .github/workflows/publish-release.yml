@@ -53,7 +53,7 @@ jobs:
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget numpy opencv-python mc-generator-utils
+          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
       - name: "update README.md setup instructions"
         id: readme
         run: |
