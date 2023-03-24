@@ -34,10 +34,11 @@ jobs:
           key: ${{ secrets.SCP_MAVENKEY }}
           source: "maven/"
           target: "/media/B/html/"
+
   upload_toCurseforge:
-    if: ${{ steps.all.outputs.dev }} == "_false"
-    runs-on: ubuntu-latest
     needs: build
+    if: ${{ build.steps.all.outputs.dev }} == "_false"
+    runs-on: ubuntu-latest
     steps:
       - name: "Upload to CurseForge"
         uses: itsmeow/curseforge-upload@v3
