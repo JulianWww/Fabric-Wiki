@@ -37,7 +37,7 @@ jobs:
       - name: "List verstion"
         id: versioning
         run: |
-          echo "::set-output name=version::$(ls build/libs)""
+          echo "::set-output name=version::$(ls build/libs)"
       - name: "Upload to CurseForge"
         uses: itsmeow/curseforge-upload@v3
         with:
