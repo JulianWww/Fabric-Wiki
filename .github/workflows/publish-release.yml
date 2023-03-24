@@ -16,73 +16,98 @@ jobs:
             all: true
           }
         }
+      - name: "Get Branch"
+        id: branch
+        run: |
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
       - {
           name: "Set up JDK 17",
           uses: actions/setup-java@v2,
           with: { distribution: "adopt", java-version: "17" },
         }
-      - {
-          name: "Build with Gradle",
-          id: build,
-          run: "chmod +x gradlew && ./gradlew build publish && rm build/libs/*sources.jar",
-        }
-      - name: "List verstion"
-        id: versioning
-        run: |
-          echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
-          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
-          echo "date=$(date +%s)" >>$GITHUB_OUTPUT
-
-      - name: "Publish maven to wandhoven.ddns.net"
-        uses: appleboy/scp-action@master
+      - uses: crowdin/github-action@master
         with:
-          host: "wandhoven.ddns.net"
-          username: ${{ secrets.SCP_MAVEN_USERNAME }}
-          key: ${{ secrets.SCP_MAVENKEY }}
-          source: "maven/"
-          target: "/media/B/html/"
-      - name: "Upload to CurseForge"
-        uses: itsmeow/curseforge-upload@v3
-        with:
-          file_path: "build/libs/${{steps.versioning.outputs.version}}"
-          game_endpoint: "minecraft"
-          relations: "fabric-api:requiredDependency"
-          game_versions: "Minecraft ${{ steps.all.outputs.minecraft_version_short }}:${{ steps.all.outputs.minecraft_version }},Java 17,Fabric"
-          project_id: "841454"
-          token: "${{ secrets.CF_API_TOKEN }}"
-          release_type: "${{ steps.all.outputs.type }}"
+          upload_sources: true
 
-      - name: Install requirements
-        run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
-      - name: "update README.md setup instructions"
-        id: readme
-        run: |
-          python3 -c 'import mc_generator_utils as mc; mc.addGradleSetupInstructions("README.md", "https://wandhoven.ddns.net/maven/", "${{ steps.all.outputs.maven_group }}.${{ steps.all.outputs.archives_base_name }}", "${{ steps.all.outputs.archives_base_name }}-${{ steps.all.outputs.minecraft_version }}")'
+          download_translations: true
+          # skip_untranslated_strings: true
 
-      - name: Commit to the repo
-        run: |
-          git config --global user.name "JulianWww/generator"
-          git config --global user.email "generator[bot]@JulianWww.github.io"
-          git pull
-          git checkout -b "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
-          git add .
-          # Force the build to succeed, even if no files were changed 
-          git commit -m 'updated setup readme' || true
-          git push origin "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+          skip_untranslated_strings: true
+          skip_untranslated_files: true
 
-      - name: Create Pull request
-        uses: devops-infra/action-pull-request@v0.5.5
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
-          target_branch: "${{ steps.versioning.outputs.branch }}"
-          title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
-          body: "automaticall updated setup instructions"
-          reviewer: JulianWww
-          assignee: JulianWww
-          label: documentation
-          get_diff: true
-          ignore_users: "dependabot"
-          allow_no_diff: false
+          source: src/main/resources/assets/wiki/lang/en_us.json
+          translation: src/main/resources/assets/wiki/lang/%locale%.json
+          # locale/language mappings must be added in Crowdin
+          # see https://github.com/jackassmc/minecraft-crowdin-languages
+
+          crowdin_branch_name: main
+          localization_branch_name: ${{ steps.branch.outputs.branch }}
+
+          create_pull_request: false
+          project_id: ${{variables.CROWDIN_ID}}
+          token: ${{ secrets.CROWDIN_TOKEN }}
+          skip_ref_checkout: true
+#      - {
+#          name: "Build with Gradle",
+#          id: build,
+#          run: "chmod +x gradlew && ./gradlew build publish && rm build/libs/*sources.jar",
+#        }
+#      - name: "List verstion"
+#        id: versioning
+#        run: |
+#          echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
+#          echo "date=$(date +%s)" >>$GITHUB_OUTPUT
+#
+#      - name: "Publish maven to wandhoven.ddns.net"
+#        uses: appleboy/scp-action@master
+#        with:
+#          host: "wandhoven.ddns.net"
+#          username: ${{ secrets.SCP_MAVEN_USERNAME }}
+#          key: ${{ secrets.SCP_MAVENKEY }}
+#          source: "maven/"
+#          target: "/media/B/html/"
+#      - name: "Upload to CurseForge"
+#        uses: itsmeow/curseforge-upload@v3
+#        with:
+#          file_path: "build/libs/${{steps.versioning.outputs.version}}"
+#          game_endpoint: "minecraft"
+#          relations: "fabric-api:requiredDependency"
+#          game_versions: "Minecraft ${{ steps.all.outputs.minecraft_version_short }}:${{ steps.all.outputs.minecraft_version }},Java 17,Fabric"
+#          project_id: "841454"
+#          token: "${{ secrets.CF_API_TOKEN }}"
+#          release_type: "${{ steps.all.outputs.type }}"
+#
+#      - name: Install requirements
+#        run: |
+#          python3 -m pip install --upgrade pip setuptools wheel
+#          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
+#      - name: "update README.md setup instructions"
+#        id: readme
+#        run: |
+#          python3 -c 'import mc_generator_utils as mc; mc.addGradleSetupInstructions("README.md", "https://wandhoven.ddns.net/maven/", "${{ steps.all.outputs.maven_group }}.${{ steps.all.outputs.archives_base_name }}", "${{ steps.all.outputs.archives_base_name }}-${{ steps.all.outputs.minecraft_version }}")'
+#
+#      - name: Commit to the repo
+#        run: |
+#          git config --global user.name "JulianWww/generator"
+#          git config --global user.email "generator[bot]@JulianWww.github.io"
+#          git pull
+#          git checkout -b "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+#          git add .
+#          # Force the build to succeed, even if no files were changed 
+#          git commit -m 'updated setup readme' || true
+#          git push origin "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+#
+#      - name: Create Pull request
+#        uses: devops-infra/action-pull-request@v0.5.5
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+#          target_branch: "${{ steps.branch.outputs.branch }}"
+#          title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
+#          body: "automaticall updated setup instructions"
+#          reviewer: JulianWww
+#          assignee: JulianWww
+#          label: documentation
+#          get_diff: true
+#          ignore_users: "dependabot"
+#          allow_no_diff: false
