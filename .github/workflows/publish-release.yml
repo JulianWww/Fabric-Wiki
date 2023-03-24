@@ -31,6 +31,7 @@ jobs:
         run: |
           echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
           echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+          echo "date=$(echo date)" >>$GITHUB_OUTPUT
 
 #      - name: "Publish maven to wandhoven.ddns.net"
 #        uses: appleboy/scp-action@master
@@ -65,17 +66,17 @@ jobs:
           git config --global user.name "JulianWww/generator"
           git config --global user.email "generator[bot]@JulianWww.github.io"
           git pull
-          git checkout -b "Updated-Setup-Instructions-to-${{ steps.versioning.outputs.version }}"
+          git checkout -b "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
           git add .
           # Force the build to succeed, even if no files were changed 
           git commit -m 'updated setup readme' || true
-          git push origin "Updated-Setup-Instructions-to-${{ steps.versioning.outputs.version }}"
+          git push origin "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
 
       - name: Create Pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: "Updated-Setup-Instructions-to-${{ steps.versioning.outputs.version }}"
+          source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
           target_branch: "${{ steps.versioning.outputs.branch }}"
           title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
           body: "**Automated pull request**"
