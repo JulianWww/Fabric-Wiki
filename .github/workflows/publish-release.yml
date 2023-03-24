@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
           echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
-          echo "date=$(echo date)" >>$GITHUB_OUTPUT
+          echo "date=$(date)" >>$GITHUB_OUTPUT
 
 #      - name: "Publish maven to wandhoven.ddns.net"
 #        uses: appleboy/scp-action@master
@@ -79,13 +79,10 @@ jobs:
           source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
           target_branch: "${{ steps.versioning.outputs.branch }}"
           title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
-          body: "**Automated pull request**"
+          body: "automaticall updated setup instructions"
           reviewer: JulianWww
           assignee: JulianWww
           label: documentation
-          draft: true
-          old_string: "** Automatic pull request**"
-          new_string: "** Automatic pull request**"
           get_diff: true
           ignore_users: "dependabot"
           allow_no_diff: false
