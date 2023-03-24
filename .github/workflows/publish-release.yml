@@ -16,11 +16,38 @@ jobs:
             all: true
           }
         }
+      - name: "Get Branch"
+        id: branch
+        run: |
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
       - {
           name: "Set up JDK 17",
           uses: actions/setup-java@v2,
           with: { distribution: "adopt", java-version: "17" },
         }
+      - uses: crowdin/github-action@master
+        with:
+          upload_sources: true
+
+          download_translations: true
+          # skip_untranslated_strings: true
+
+          skip_untranslated_strings: true
+
+          source: src/main/resources/assets/wiki/lang/en_us.json
+          translation: src/main/resources/assets/wiki/lang/%locale%.json
+          # locale/language mappings must be added in Crowdin
+          # see https://github.com/jackassmc/minecraft-crowdin-languages
+
+          crowdin_branch_name: main
+          localization_branch_name: ${{ steps.branch.outputs.branch }}
+
+          create_pull_request: false
+          project_id: ${{ vars.CROWDIN_ID }}
+          token: ${{ secrets.CROWDIN_TOKEN }}
+          skip_ref_checkout: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       - {
           name: "Build with Gradle",
           id: build,
@@ -30,7 +57,6 @@ jobs:
         id: versioning
         run: |
           echo "version=$(ls build/libs)" >>$GITHUB_OUTPUT
-          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
           echo "date=$(date +%s)" >>$GITHUB_OUTPUT
 
       - name: "Publish maven to wandhoven.ddns.net"
@@ -77,7 +103,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
-          target_branch: "${{ steps.versioning.outputs.branch }}"
+          target_branch: "${{ steps.branch.outputs.branch }}"
           title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
           body: "automaticall updated setup instructions"
           reviewer: JulianWww
