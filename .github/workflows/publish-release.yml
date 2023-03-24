@@ -30,6 +30,7 @@ jobs:
         id: versioning
         run: |
           echo "::set-output name=version::$(ls build/libs)"
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
 
 #      - name: "Publish maven to wandhoven.ddns.net"
 #        uses: appleboy/scp-action@master
@@ -69,3 +70,22 @@ jobs:
           # Force the build to succeed, even if no files were changed 
           git commit -m 'updated setup readme' || true
           git push origin "Updated-Setup-Instructions-to-${{ steps.versioning.outputs.version }}"
+          
+      - name: Create Pull request
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: "Updated-Setup-Instructions-to-${{ steps.versioning.outputs.version }}"
+          target_branch: "${{ steps.versioning.outputs.branch }}"
+          title: My pull request
+          template: .github/PULL_REQUEST_TEMPLATE.md
+          body: "**Automated pull request**"
+          reviewer: JulianWww
+          assignee: JulianWww
+          label: documentation
+          draft: true
+          old_string: "** Automatic pull request**"
+          new_string: "** Automatic pull request**"
+          get_diff: true
+          ignore_users: "dependabot"
+          allow_no_diff: false
