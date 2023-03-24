@@ -1,5 +1,6 @@
 # Fabric Example Mod
 [![build](https://github.com/JulianWww/Fabric-Wiki/actions/workflows/build.yml/badge.svg)](https://github.com/JulianWww/Fabric-Wiki/actions/workflows/build.yml)
+[![Crowdin](https://badges.crowdin.net/fabric-wiki/localized.svg)](https://crowdin.com/project/fabric-wiki)
 
 ## Setup
 add this mod to your project by adding the following into your ``build.gradle``
