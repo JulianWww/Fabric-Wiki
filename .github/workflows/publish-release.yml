@@ -46,6 +46,8 @@ jobs:
           project_id: ${{ vars.CROWDIN_ID }}
           token: ${{ secrets.CROWDIN_TOKEN }}
           skip_ref_checkout: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 #      - {
 #          name: "Build with Gradle",
 #          id: build,
