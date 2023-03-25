@@ -44,7 +44,7 @@ jobs:
   translate:
     runs-on: [self-hosted]
     timeout-minutes: 54600
-    need: getLanguages
+    needs: getLanguages
     steps:
       - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
       - name: Install requirements
@@ -66,7 +66,7 @@ jobs:
 
   build:
     runs-on: [ubuntu-latest]
-    need: translate
+    needs: translate
     steps:
       - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
       - {
