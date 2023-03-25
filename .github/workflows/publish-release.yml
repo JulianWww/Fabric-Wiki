@@ -9,7 +9,7 @@ jobs:
     steps:
       - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
       - name: backup langFile 
-        - run |
+        run |
           mkdir .tmp
           cp src/main/resources/assets/wiki/lang/%locale%.json .tmp/%locale%.json
       - uses: crowdin/github-action@master
@@ -36,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       - name: copy locale source back in
-        - run |
+        run |
           cp .tmp/%locale%.json src/main/resources/assets/wiki/lang/%locale%.json
 
   translate:
