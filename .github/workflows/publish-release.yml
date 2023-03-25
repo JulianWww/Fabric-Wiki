@@ -5,7 +5,8 @@ on:
     types: [published]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    timeout-minutes: 54600
+    runs-on: [self-hosted]
     steps:
       - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
       - {
