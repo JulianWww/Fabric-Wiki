@@ -48,6 +48,10 @@ jobs:
           skip_ref_checkout: true
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      - name: Install requirements
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict deep_translator pysocks
       - name: Build remaining Translations
         run: |
           wget https://raw.githubusercontent.com/JulianWww/Minecraft-Generator-Utils/main/crowdin/translate.py
@@ -81,11 +85,6 @@ jobs:
 #          project_id: "841454"
 #          token: "${{ secrets.CF_API_TOKEN }}"
 #          release_type: "${{ steps.all.outputs.type }}"
-
-      - name: Install requirements
-        run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
       - name: "update README.md setup instructions"
         id: readme
         run: |
