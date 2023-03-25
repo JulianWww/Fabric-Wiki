@@ -4,29 +4,11 @@ on:
   release:
     types: [published]
 jobs:
-  build:
-    timeout-minutes: 54600
-    runs-on: [self-hosted]
+  getLanguages:
+    runs-on: [ubuntu-latest]
     steps:
-      - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
-      - {
-          uses: madhead/read-java-properties@latest,
-          id: all,
-          with: {
-            file: gradle.properties,
-            all: true
-          }
-        }
-      - name: "Get Branch"
-        id: branch
-        run: |
-          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
-      - {
-          name: "Set up JDK 17",
-          uses: actions/setup-java@v2,
-          with: { distribution: "adopt", java-version: "17" },
-        }
-      - uses: crowdin/github-action@master
+    - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
+    - uses: crowdin/github-action@master
         with:
           upload_sources: true
 
@@ -49,14 +31,65 @@ jobs:
           skip_ref_checkout: true
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+    - name: Commit to the repo
+        run: |
+          git config --global user.name "JulianWww/generator"
+          git config --global user.email "generator[bot]@JulianWww.github.io"
+          git pull
+          git add .
+          git commit -m 'got crowdin languages' || true
+          git push
+
+  translate:
+    runs-on: [self-hosted]
+    timeout-minutes: 54600
+    need: getLanguages
+    steps:
+      - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict deep_translator pysocks
+          python3 -m pip install deep_translator pysocks
       - name: Build remaining Translations
         run: |
           wget https://raw.githubusercontent.com/JulianWww/Minecraft-Generator-Utils/main/crowdin/translate.py
           python3 translate.py ${{ steps.all.outputs.archives_base_name }} en_us en
+      - name: Commit to the repo
+        run: |
+          git config --global user.name "JulianWww/generator"
+          git config --global user.email "generator[bot]@JulianWww.github.io"
+          git pull
+          git add .
+          git commit -m 'built remaining languages with google' || true
+          git push
+
+  build:
+    runs-on: [ubuntu-latest]
+    need: translate
+    steps:
+      - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
+      - {
+          uses: madhead/read-java-properties@latest,
+          id: all,
+          with: {
+            file: gradle.properties,
+            all: true
+          }
+        }
+      - name: "Get Branch"
+        id: branch
+        run: |
+          echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+      - {
+          name: "Set up JDK 17",
+          uses: actions/setup-java@v2,
+          with: { distribution: "adopt", java-version: "17" },
+        }
+      - name: Install requirements
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
       - {
           name: "Build with Gradle",
           id: build,
