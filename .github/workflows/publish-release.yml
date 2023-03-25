@@ -32,28 +32,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
-#  translate:
-#    runs-on: [self-hosted]
-#    timeout-minutes: 54600
-#    needs: getLanguages
-#    steps:
-#      - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
-#      - name: Install requirements
-#        run: |
-#          python3 -m pip install --upgrade pip setuptools wheel
-#          python3 -m pip install deep_translator pysocks
-#      - name: Build remaining Translations
-#        run: |
-#          wget https://raw.githubusercontent.com/JulianWww/Minecraft-Generator-Utils/main/crowdin/translate.py
-#          python3 translate.py ${{ vars.MOD_ID }} en_us en
-#      - name: Commit to the repo
-#        run: |
-#          git config --global user.name "JulianWww/generator"
-#          git config --global user.email "generator[bot]@JulianWww.github.io"
-#          git pull
-#          git add .
-#          git commit -m 'built remaining languages with google' || true
-#          git push
+  translate:
+    runs-on: [self-hosted]
+    timeout-minutes: 54600
+    needs: getLanguages
+    steps:
+      - { uses: actions/checkout@v3, with: { fetch-depth: 0, path: "publish" } }
+      - name: Install requirements
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install deep_translator pysocks
+      - name: Build remaining Translations
+        run: |
+          wget https://raw.githubusercontent.com/JulianWww/Minecraft-Generator-Utils/main/crowdin/translate.py
+          python3 translate.py ${{ vars.MOD_ID }} en_us en
+      - name: Commit to the repo
+        run: |
+          git config --global user.name "JulianWww/generator"
+          git config --global user.email "generator[bot]@JulianWww.github.io"
+          git pull
+          git add .
+          git commit -m 'built remaining languages with google' || true
+          git push
 #
 #  build:
 #    runs-on: [ubuntu-latest]
