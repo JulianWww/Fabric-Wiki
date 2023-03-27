@@ -4,10 +4,69 @@ on:
   release:
     types: [published]
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  getLanguages:
+    runs-on: [ubuntu-latest]
     steps:
       - { uses: actions/checkout@v3, with: { fetch-depth: 0 } }
+      - name: backup langFile 
+        run: |
+          mkdir .tmp
+          cp src/main/resources/assets/wiki/lang/en_us.json .tmp/en_us.json
+      - uses: crowdin/github-action@master
+        with:
+          upload_sources: true
+
+          download_translations: true
+          # skip_untranslated_strings: true
+
+          skip_untranslated_strings: true
+
+          source: src/main/resources/assets/wiki/lang/en_us.json
+          translation: src/main/resources/assets/wiki/lang/%locale%.json
+          # locale/language mappings must be added in Crowdin
+          # see https://github.com/jackassmc/minecraft-crowdin-languages
+
+          crowdin_branch_name: main
+          localization_branch_name: publish
+
+          create_pull_request: false
+          project_id: ${{ vars.CROWDIN_ID }}
+          token: ${{ secrets.CROWDIN_TOKEN }}
+          skip_ref_checkout: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      - name: copy locale source back in
+        run: |
+          cp .tmp/en_us.json src/main/resources/assets/wiki/lang/en_us.json
+
+  translate:
+    runs-on: [self-hosted]
+    timeout-minutes: 54600
+    needs: getLanguages
+    steps:
+      - { uses: actions/checkout@v3, with: { fetch-depth: 0, ref: "publish" } }
+      - name: Install requirements
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install deep_translator pysocks
+      - name: Build remaining Translations
+        run: |
+          wget https://raw.githubusercontent.com/JulianWww/Minecraft-Generator-Utils/main/crowdin/translate.py
+          python3 translate.py ${{ vars.MOD_ID }} en_us en
+      - name: Commit to the repo
+        run: |
+          git config --global user.name "JulianWww/generator"
+          git config --global user.email "generator[bot]@JulianWww.github.io"
+          git pull
+          git add .
+          git commit -m 'built remaining languages with google' || true
+          git push
+
+  build:
+    runs-on: [ubuntu-latest]
+    needs: translate
+    steps:
+      - { uses: actions/checkout@v3, with: { fetch-depth: 0, ref: publish } }
       - {
           uses: madhead/read-java-properties@latest,
           id: all,
@@ -25,29 +84,10 @@ jobs:
           uses: actions/setup-java@v2,
           with: { distribution: "adopt", java-version: "17" },
         }
-      - uses: crowdin/github-action@master
-        with:
-          upload_sources: true
-
-          download_translations: true
-          # skip_untranslated_strings: true
-
-          skip_untranslated_strings: true
-
-          source: src/main/resources/assets/wiki/lang/en_us.json
-          translation: src/main/resources/assets/wiki/lang/%locale%.json
-          # locale/language mappings must be added in Crowdin
-          # see https://github.com/jackassmc/minecraft-crowdin-languages
-
-          crowdin_branch_name: main
-          localization_branch_name: ${{ steps.branch.outputs.branch }}
-
-          create_pull_request: false
-          project_id: ${{ vars.CROWDIN_ID }}
-          token: ${{ secrets.CROWDIN_TOKEN }}
-          skip_ref_checkout: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      - name: Install requirements
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
       - {
           name: "Build with Gradle",
           id: build,
@@ -77,11 +117,6 @@ jobs:
           project_id: "841454"
           token: "${{ secrets.CF_API_TOKEN }}"
           release_type: "${{ steps.all.outputs.type }}"
-
-      - name: Install requirements
-        run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install wget numpy opencv-python mc-generator-utils xmltodict
       - name: "update README.md setup instructions"
         id: readme
         run: |
@@ -92,20 +127,19 @@ jobs:
           git config --global user.name "JulianWww/generator"
           git config --global user.email "generator[bot]@JulianWww.github.io"
           git pull
-          git checkout -b "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
           git add .
           # Force the build to succeed, even if no files were changed 
           git commit -m 'updated setup readme' || true
-          git push origin "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+          git push
 
       - name: Create Pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: "Updated-Setup-Instructions-for-the-${{ steps.versioning.outputs.date }}"
+          source_branch: "publish"
           target_branch: "${{ steps.branch.outputs.branch }}"
-          title: "Updated Setup Instructions for ${{ steps.versioning.outputs.version }}"
-          body: "automaticall updated setup instructions"
+          title: "Published for ${{ steps.versioning.outputs.version }}"
+          body: "file changes for publication"
           reviewer: JulianWww
           assignee: JulianWww
           label: documentation
