@@ -25,8 +25,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	
-	implementation 'org.apache.commons:commons-text:1.10.0'
-	include 'org.apache.commons:commons-text:1.10.0'
+	implementation 'org.apache.commons:commons-text:1.11.0'
+	include 'org.apache.commons:commons-text:1.11.0'
 }
 
 group = project.group + "." + project.archives_base_name
